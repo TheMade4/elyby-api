@@ -76,3 +76,8 @@ class MCRefreshRequest(BaseModel):
 class MCSignOutRequest(BaseModel):
     username: str
     password: str
+
+
+class MCInvalidateRequest(BaseModel):
+    accessToken: str
+    clientToken: UUID

@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "elyby-api"
 version = "0.1.0-dev"
-description = ""
+description = "Not official library for convenient interaction with API of Ely.by service (custom skin system for minecraft)."
 authors = ["TheMade4"]
 license = "GPL-3.0 license"
 readme = "README.md"
+repository = "https://github.com/TheMade4/elyby-api"
 
 
 [tool.poetry.dependencies]

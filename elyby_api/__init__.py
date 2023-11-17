@@ -19,5 +19,6 @@ __all__ = [
     'MCAuthResponse',
     'MCRefreshRequest',
     'MCSignOutRequest',
-    'MCAuthAPI'
+    'MCAuthAPI',
+    'MCInvalidateRequest'
 ]

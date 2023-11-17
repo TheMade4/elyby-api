@@ -4,7 +4,7 @@ from uuid import UUID
 
 import requests
 
-from elyby_api import MCAuthRequest, MCAuthResponse, UnknownException, MCRefreshRequest, User, UsernameInHistory, APIError, IllegalArgumentException, MCSignOutRequest
+from elyby_api._types import MCAuthRequest, MCAuthResponse, UnknownException, MCRefreshRequest, User, UsernameInHistory, APIError, IllegalArgumentException, MCSignOutRequest, MCInvalidateRequest
 from elyby_api.utils import get_exception
 
 BASE_URL = 'https://authserver.ely.by'
@@ -152,9 +152,6 @@ class BaseAPI:
 
 class MCAuthAPI:
 
-    def __init__(self):
-        raise NotImplementedError()
-
     @staticmethod
     def authenticate(data: MCAuthRequest) -> MCAuthResponse:
         """
@@ -287,8 +284,41 @@ class MCAuthAPI:
         raise UnknownException(resp.text)
 
     @staticmethod
-    def invalidate():
-        pass
+    def invalidate(data: MCInvalidateRequest) -> None:
+        """
+        The query allows you to invalidate the accessToken.
+
+
+        >>> import uuid
+        >>> class FakeResponse:pass
+        >>> FakeResponse.status_code = 400
+        >>> FakeResponse.json = lambda: {'error':'ForbiddenOperationException','errorMessage':'fakeerror'}
+        >>> requests.post = lambda _, json: FakeResponse
+        >>> MCAuthAPI.invalidate(MCInvalidateRequest(accessToken='faketoken', clientToken=uuid.uuid1()))
+        Traceback (most recent call last):
+        ...
+        elyby_api._types.ForbiddenOperationException: fakeerror
+        >>> FakeResponse.status_code = 200
+        >>> MCAuthAPI.invalidate(MCInvalidateRequest(accessToken='faketoken', clientToken=uuid.uuid1())) is None
+        True
+
+
+        :param data: MCInvalidateRequest type
+        :return: None
+        """
+
+        url = f'{AUTH_URL}/invalidate'
+
+        resp = requests.post(url, json=data.model_dump_json())
+
+        if resp.status_code == 400:
+            error = APIError(**resp.json())
+            raise get_exception(error)
+
+        if resp.status_code == 200:
+            return
+
+        raise UnknownException(resp.text)
 
 
 if __name__ == '__main__':

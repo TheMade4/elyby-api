@@ -1,6 +1,5 @@
-from elyby_api import BaseAPI
+from elyby_api import BaseAPI, MCAuthAPI
 
 
-class ElybyAPI(BaseAPI):
-    def __init__(self):
-        raise NotImplementedError()
+class ElybyAPI(BaseAPI, MCAuthAPI):
+    pass
